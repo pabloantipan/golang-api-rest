@@ -42,9 +42,9 @@ func NewServer(context context.Context, config *Config) (*Broker, error) {
 	return &Broker{config: config, router: mux.NewRouter()}, nil
 }
 
-func (broker *Broker) Start(binder func(server Server, router mux.Router)) {
+func (broker *Broker) Start(binder func(server Server, router *mux.Router)) {
 	broker.router = mux.NewRouter()
-	binder(broker, *broker.router)
+	binder(broker, broker.router)
 	log.Println("Starting server on port", broker.Config().Port)
 	if err := http.ListenAndServe(broker.config.Port, broker.router); err != nil {
 		log.Fatal("ListenAndServe: ", err)
