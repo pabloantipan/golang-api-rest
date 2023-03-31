@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	InsertUser(ctx context.Context, user *models.User) error
 	GetUser(ctx context.Context, id int64) (*models.User, error)
+	Close() error
 }
 
 var implementation UserRepository
