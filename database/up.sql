@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
-  `id` SERIAL PRIMARY KEY,
+  `id` VARCHAR(255) UNiQUE NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT NOW(),
