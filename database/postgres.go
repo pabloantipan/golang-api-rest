@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"go/golang-api-rest/models"
 	"log"
+
+	_ "github.com/lib/pq"
 )
 
 type PostgresRepository struct {
