@@ -22,7 +22,7 @@ func NewPostgresRepository(url string) (*PostgresRepository, error) {
 }
 
 func (repo *PostgresRepository) InsertUser(ctx context.Context, user *models.User) error {
-	_, err := repo.db.ExecContext(ctx, "INSERT INTO users (email, password) VALUES ($1, $2)", user.Email, user.Password)
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO users (id, email, password) VALUES ($1, $2, $3)", user.Id, user.Email, user.Password)
 	return err
 }
 
@@ -48,6 +48,31 @@ func (repo *PostgresRepository) GetUserById(ctx context.Context, id string) (*mo
 	}
 
 	return &user, nil
+}
+
+func (repo *PostgresRepository) GetUsers(ctx context.Context) (*[]models.User, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, email, password FROM users")
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+	var users []models.User
+
+	for rows.Next() {
+		var user = models.User{}
+		if err = rows.Scan(&user.Id, &user.Email); err == nil {
+			users = append(users, user)
+		}
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return &users, nil
 }
 
 func (repo *PostgresRepository) Close() error {
